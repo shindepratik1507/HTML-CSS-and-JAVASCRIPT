@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QR Code Generator</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <style>
     body {
@@ -27,7 +27,7 @@
     h2 {
       color: #333;
     }
-    input, button {
+    input, button, select {
       padding: 12px;
       margin: 10px 0;
       font-size: 16px;
@@ -61,6 +61,12 @@
   <div class="container">
     <h2>QR Code Generator</h2>
     <input type="text" id="text-input" placeholder="Enter text or URL" />
+    <select id="qr-color">
+      <option value="#000000">Black</option>
+      <option value="#007bff">Blue</option>
+      <option value="#ff0000">Red</option>
+      <option value="#00ff00">Green</option>
+    </select>
     <button onclick="generateQR()">Generate QR Code</button>
     <div id="qrcode-container">
       <div id="qrcode" class="hidden"></div>
@@ -73,6 +79,7 @@
       const inputText = document.getElementById('text-input').value;
       const qrCodeDiv = document.getElementById('qrcode');
       const downloadBtn = document.getElementById('download-btn');
+      const qrColor = document.getElementById('qr-color').value;
 
       qrCodeDiv.innerHTML = '';
 
@@ -80,7 +87,10 @@
         new QRCode(qrCodeDiv, {
           text: inputText,
           width: 200,
-          height: 200
+          height: 200,
+          colorDark: qrColor,
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
         });
         qrCodeDiv.classList.remove('hidden');
         downloadBtn.classList.remove('hidden');
