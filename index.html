@@ -1,51 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Advanced QR Code Generator</title>
   <!-- QRCode.js Library -->
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <!-- html2canvas for downloading the QR as an image -->
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-  <!-- Google Fonts for a modern look -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
-    }
-    body {
-      font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
       background: linear-gradient(135deg, #1e1e2f, #3b3f58);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
     }
+
     .container {
       background-color: #fff;
-      width: 400px;
-      padding: 25px 30px;
+      width: 100%;
+      max-width: 420px;
+      padding: 30px 25px;
       border-radius: 12px;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
       text-align: center;
     }
+
     h2 {
       color: #333;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      font-weight: 500;
     }
+
     .form-group {
       margin-bottom: 15px;
       text-align: left;
     }
+
     .form-group label {
       display: block;
+      margin-bottom: 6px;
       font-size: 14px;
-      margin-bottom: 5px;
       color: #555;
     }
+
     .form-group input[type="text"],
     .form-group select,
     .form-group input[type="color"],
@@ -57,72 +65,67 @@
       border-radius: 6px;
       outline: none;
     }
+
     .btn {
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
+      margin: 8px 0;
       font-size: 16px;
       border: none;
       border-radius: 6px;
-      cursor: pointer;
       font-weight: 500;
-      transition: background-color 0.3s ease;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
     }
-    .btn-generate {
-      background-color: #007bff;
-      color: #fff;
+
+    .btn:hover {
+      transform: scale(1.02);
     }
-    .btn-generate:hover {
-      background-color: #0056b3;
+
+    .btn:active {
+      transform: scale(0.98);
     }
-    .btn-download {
-      background-color: #28a745;
-      color: #fff;
-    }
-    .btn-download:hover {
-      background-color: #1e7e34;
-    }
-    .btn-copy {
-      background-color: #ffc107;
-      color: #333;
-    }
-    .btn-copy:hover {
-      background-color: #e0a800;
-    }
-    .btn-reset {
-      background-color: #dc3545;
-      color: #fff;
-    }
-    .btn-reset:hover {
-      background-color: #c82333;
-    }
+
+    .btn-generate { background-color: #007bff; color: white; }
+    .btn-generate:hover { background-color: #0056b3; }
+
+    .btn-download { background-color: #28a745; color: white; }
+    .btn-download:hover { background-color: #1e7e34; }
+
+    .btn-copy { background-color: #ffc107; color: #333; }
+    .btn-copy:hover { background-color: #e0a800; }
+
+    .btn-reset { background-color: #dc3545; color: white; }
+    .btn-reset:hover { background-color: #c82333; }
+
     #qrcode-container {
       margin-top: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
       min-height: 220px;
     }
+
     #qrcode {
       padding: 10px;
       background: #fff;
-      display: inline-block;
-    }
-    .hidden {
       display: none;
+    }
+
+    .visible {
+      display: inline-block !important;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Advanced QR Code Generator</h2>
-    <!-- Input for text or URL -->
+
     <div class="form-group">
       <label for="text-input">Enter text or URL:</label>
       <input type="text" id="text-input" placeholder="https://example.com" />
     </div>
-    <!-- Dropdown for QR Color -->
+
     <div class="form-group">
       <label for="qr-color">QR Code Color:</label>
       <select id="qr-color">
@@ -132,12 +135,12 @@
         <option value="#00ff00">Green</option>
       </select>
     </div>
-    <!-- Color Picker for Background Color -->
+
     <div class="form-group">
       <label for="qr-bg-color">Background Color:</label>
       <input type="color" id="qr-bg-color" value="#ffffff" />
     </div>
-    <!-- Dropdown for QR Code Size -->
+
     <div class="form-group">
       <label for="qr-size">QR Code Size:</label>
       <select id="qr-size">
@@ -146,7 +149,7 @@
         <option value="300">Large (300x300)</option>
       </select>
     </div>
-    <!-- Dropdown for Error Correction Level -->
+
     <div class="form-group">
       <label for="qr-error">Error Correction Level:</label>
       <select id="qr-error">
@@ -156,108 +159,78 @@
         <option value="H">H (High)</option>
       </select>
     </div>
-    <!-- File Input for Logo -->
+
     <div class="form-group">
       <label for="qr-logo">Upload Logo (optional):</label>
       <input type="file" id="qr-logo" accept="image/*" />
     </div>
-    <!-- Buttons for actions -->
+
     <button class="btn btn-generate" onclick="generateQR()">Generate QR Code</button>
     <button class="btn btn-reset" onclick="resetForm()">Reset</button>
+
     <div id="qrcode-container">
-      <canvas id="qrcode" class="hidden"></canvas>
+      <canvas id="qrcode"></canvas>
     </div>
-    <button class="btn btn-download hidden" id="download-btn" onclick="downloadQR()">Download QR Code</button>
-    <button class="btn btn-copy hidden" id="copy-btn" onclick="copyText()">Copy URL</button>
+
+    <button class="btn btn-download" id="download-btn" onclick="downloadQR()" style="display: none;">Download QR Code</button>
+    <button class="btn btn-copy" id="copy-btn" onclick="copyText()" style="display: none;">Copy URL</button>
   </div>
 
   <script>
-    // Global variable for QRCode instance
-    let qrCodeInstance;
-
     function generateQR() {
-      const inputText = document.getElementById('text-input').value.trim();
-      const qrCanvas = document.getElementById('qrcode');
-      const downloadBtn = document.getElementById('download-btn');
-      const copyBtn = document.getElementById('copy-btn');
-      const qrColor = document.getElementById('qr-color').value;
-      const bgColor = document.getElementById('qr-bg-color').value;
-      const qrSize = parseInt(document.getElementById('qr-size').value);
-      const qrError = document.getElementById('qr-error').value;
-      const qrLogo = document.getElementById('qr-logo').files[0];
+      const text = document.getElementById('text-input').value.trim();
+      const colorDark = document.getElementById('qr-color').value;
+      const colorLight = document.getElementById('qr-bg-color').value;
+      const size = parseInt(document.getElementById('qr-size').value);
+      const errorLevel = document.getElementById('qr-error').value;
+      const logoFile = document.getElementById('qr-logo').files[0];
+      const canvas = document.getElementById('qrcode');
 
-      if (inputText === '') {
-        alert('Please enter a valid text or URL!');
-        return;
-      }
+      if (!text) return alert('Please enter text or URL.');
 
-      // Clear previous QR code (remove previous canvas children)
-      qrCanvas.classList.remove('hidden');
-      qrCanvas.getContext('2d').clearRect(0, 0, qrCanvas.width, qrCanvas.height);
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.height = size;
+      ctx.clearRect(0, 0, size, size);
 
-      // Remove old QRCode instance if exists (by replacing the canvas)
-      qrCanvas.width = qrSize;
-      qrCanvas.height = qrSize;
-
-      // Map error correction level to library constant
-      const errorLevels = {
-        'L': QRCode.CorrectLevel.L,
-        'M': QRCode.CorrectLevel.M,
-        'Q': QRCode.CorrectLevel.Q,
-        'H': QRCode.CorrectLevel.H
-      };
-
-      // Generate QR code on a temporary div to extract canvas later
       const tempDiv = document.createElement('div');
-      qrCodeInstance = new QRCode(tempDiv, {
-        text: inputText,
-        width: qrSize,
-        height: qrSize,
-        colorDark: qrColor,
-        colorLight: bgColor,
-        correctLevel: errorLevels[qrError]
+      const qr = new QRCode(tempDiv, {
+        text,
+        width: size,
+        height: size,
+        colorDark,
+        colorLight,
+        correctLevel: QRCode.CorrectLevel[errorLevel]
       });
 
-      // Wait a tick to let the QR code be generated
       setTimeout(() => {
-        // Extract the generated QR code canvas/image
-        let qrImg = tempDiv.querySelector('img');
-        if (qrImg) {
-          // Create a canvas to draw the QR code image onto our canvas
-          const img = new Image();
-          img.src = qrImg.src;
-          img.onload = function() {
-            const ctx = qrCanvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, qrSize, qrSize);
-            // If a logo is provided, overlay it
-            if (qrLogo) {
-              const reader = new FileReader();
-              reader.onload = function(e) {
-                const logo = new Image();
-                logo.src = e.target.result;
-                logo.onload = function() {
-                  // Calculate logo size and position (centered)
-                  const logoSize = qrSize * 0.25;
-                  const dx = (qrSize - logoSize) / 2;
-                  const dy = (qrSize - logoSize) / 2;
-                  ctx.drawImage(logo, dx, dy, logoSize, logoSize);
-                };
+        const img = tempDiv.querySelector('img');
+        const qrImg = new Image();
+        qrImg.src = img.src;
+        qrImg.onload = () => {
+          ctx.drawImage(qrImg, 0, 0, size, size);
+          if (logoFile) {
+            const reader = new FileReader();
+            reader.onload = e => {
+              const logo = new Image();
+              logo.src = e.target.result;
+              logo.onload = () => {
+                const logoSize = size * 0.25;
+                const x = (size - logoSize) / 2;
+                const y = (size - logoSize) / 2;
+                ctx.drawImage(logo, x, y, logoSize, logoSize);
               };
-              reader.readAsDataURL(qrLogo);
-            }
-            // Show download & copy buttons
-            downloadBtn.classList.remove('hidden');
-            copyBtn.classList.remove('hidden');
-          };
-        }
-        // Clean up temporary div
-        tempDiv.remove();
+            };
+            reader.readAsDataURL(logoFile);
+          }
+        };
+        document.getElementById('download-btn').style.display = 'block';
+        document.getElementById('copy-btn').style.display = 'block';
+        canvas.classList.add('visible');
       }, 100);
     }
 
     function downloadQR() {
-      const qrCanvas = document.getElementById('qrcode');
-      html2canvas(qrCanvas).then(canvas => {
+      html2canvas(document.getElementById('qrcode')).then(canvas => {
         const link = document.createElement('a');
         link.href = canvas.toDataURL('image/jpeg');
         link.download = 'qr_code.jpg';
@@ -266,28 +239,20 @@
     }
 
     function copyText() {
-      const inputText = document.getElementById('text-input').value.trim();
-      if (inputText !== '') {
-        navigator.clipboard.writeText(inputText).then(() => {
-          alert('URL/text copied to clipboard!');
-        }, () => {
-          alert('Failed to copy text.');
-        });
-      }
+      const text = document.getElementById('text-input').value.trim();
+      if (text) navigator.clipboard.writeText(text).then(() => alert('Copied!'));
     }
 
     function resetForm() {
       document.getElementById('text-input').value = '';
       document.getElementById('qr-logo').value = '';
-      // Reset to default colors and options if desired
-      document.getElementById('qr-color').value = "#000000";
-      document.getElementById('qr-bg-color').value = "#ffffff";
-      document.getElementById('qr-size').value = "200";
-      document.getElementById('qr-error').value = "M";
-      // Hide QR code and buttons
-      document.getElementById('qrcode').classList.add('hidden');
-      document.getElementById('download-btn').classList.add('hidden');
-      document.getElementById('copy-btn').classList.add('hidden');
+      document.getElementById('qr-color').value = '#000000';
+      document.getElementById('qr-bg-color').value = '#ffffff';
+      document.getElementById('qr-size').value = '200';
+      document.getElementById('qr-error').value = 'M';
+      document.getElementById('download-btn').style.display = 'none';
+      document.getElementById('copy-btn').style.display = 'none';
+      document.getElementById('qrcode').classList.remove('visible');
     }
   </script>
 </body>
